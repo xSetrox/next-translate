@@ -1,4 +1,4 @@
-![lancescript reloaded](https://images2.imgbox.com/ae/9d/DdotE7af_o.png)
+![nextTranslate](https://images2.imgbox.com/27/d1/c9VpV2m8_o.png)
 # nextTranslate
 An intelligent automatic chat translator LUA for the Stand mod menu.  
   
