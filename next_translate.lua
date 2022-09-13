@@ -42,8 +42,10 @@ menu.toggle(menu.my_root(), "Only translate foreign game lang", {"nextforeignonl
     only_translate_foreign = on
 end, true)
 
+local players_on_cooldown = {}
+
 chat.on_message(function(sender, reserved, text, team_chat, networked, is_auto)
-    if do_translate and networked then
+    if do_translate and networked and players.user() ~= sender then
         local encoded_text = encode_for_web(text)
         local player_lang = language_codes_by_enum[players.get_language(sender)]
         local player_name = players.get_name(sender)
@@ -52,19 +54,26 @@ chat.on_message(function(sender, reserved, text, team_chat, networked, is_auto)
         end
         -- credit to the original chat translator for the api code
         local translation
-        async_http.init("translate.googleapis.com", "/translate_a/single?client=gtx&sl=auto&tl=" .. iso_my_lang .."&dt=t&q=".. encoded_text, function(data)
-			translation, original, source_lang = data:match("^%[%[%[\"(.-)\",\"(.-)\",.-,.-,.-]],.-,\"(.-)\"")
-            if source_lang == nil then 
+        if players_on_cooldown[sender] == nil then
+            async_http.init("translate.googleapis.com", "/translate_a/single?client=gtx&sl=auto&tl=" .. iso_my_lang .."&dt=t&q=".. encoded_text, function(data)
+		    	translation, original, source_lang = data:match("^%[%[%[\"(.-)\",\"(.-)\",.-,.-,.-]],.-,\"(.-)\"")
+                if source_lang == nil then 
+                    util.toast("Failed to translate a message from " .. player_name)
+                    return
+                end
+                players_on_cooldown[sender] = true
+                if get_iso_version_of_lang(source_lang) ~= iso_my_lang then
+                    chat.send_message(string.gsub(player_name .. ': \"' .. translation .. '\"', "%+", " "), team_chat, true, false)
+                end
+                util.yield(1000)
+                players_on_cooldown[sender] = nil
+		    end, function()
                 util.toast("Failed to translate a message from " .. player_name)
-                return
-            end
-            if get_iso_version_of_lang(source_lang) ~= iso_my_lang then
-                chat.send_message(string.gsub(player_name .. ': \"' .. translation .. '\"', "%+", " "), team_chat, true, false)
-            end
-		end, function()
-            util.toast("Failed to translate a message from " .. player_name)
-        end)
-		async_http.dispatch()
+            end)
+		    async_http.dispatch()
+        else
+            util.toast(player_name .. "sent a message, but is on cooldown from translations. Consider kicking this player if they are spamming the chat to prevent a possible temporary ban from Google translate.")
+        end
     end
 end)
 
