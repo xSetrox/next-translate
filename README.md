@@ -2,9 +2,8 @@
 # nextTranslate
 An intelligent automatic chat translator LUA for the Stand mod menu.  
   
-Next-Translate is a BETA chat translator script that is as simple and intelligent as possible.
+Next-Translate is a chat translator script that is as simple and intelligent as possible.
 It will use Stand's language to automatically select your language, and will automatically translate incoming chat messages into your language accordingly. It even has an intelligent check that will check someone's game language to save some false positives and API calls.
-This script is BETA and is pending bug reports and suggestions. But it seems pretty stable so far, so I am releasing it. Thanks for understanding!
 
 ## Install
 Download the repo as zip and drag everything from it, except readme.md and license.txt, into your Stand's lua scripts folder. Done.  
