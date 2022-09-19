@@ -55,7 +55,7 @@ menu.action(menu.my_root(), "Disclaimer", {}, "Disclaimer: Note that the Google 
 local players_on_cooldown = {}
 
 chat.on_message(function(sender, reserved, text, team_chat, networked, is_auto)
-    if do_translate and networked --[[and players.user() ~= sender]] then
+    if do_translate and networked and players.user() ~= sender then
         local encoded_text = encode_for_web(text)
         local player_lang = language_codes_by_enum[players.get_language(sender)]
         local player_name = players.get_name(sender)
@@ -73,9 +73,9 @@ chat.on_message(function(sender, reserved, text, team_chat, networked, is_auto)
                     return
                 end
                 players_on_cooldown[sender] = true
-                --if get_iso_version_of_lang(source_lang) ~= iso_my_lang then
+                if get_iso_version_of_lang(source_lang) ~= iso_my_lang then
                     chat_scaleform.ADD_MESSAGE(player_name, decoded_text, "TRANSLATION", false, 24)
-                --end
+                end
                 util.yield(1000)
                 players_on_cooldown[sender] = nil
             end, function()
