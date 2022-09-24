@@ -38,7 +38,7 @@ local my_lang = lang.get_current()
 local iso_my_lang = get_iso_version_of_lang(my_lang)
 ------------------------settings-----------------------
 local translate_incoming = false
-local translate_language_incoming = "en"
+local translate_language_incoming = get_iso_version_of_lang(my_lang)
 local output_mode = 2
 local translate_networked = false
 
@@ -48,7 +48,7 @@ local translate_language_outgoing = "en"
 local only_translate_foreign = true
 -------------------Incoming Messages----------------------
 local incoming <const> = menu.list(menu.my_root(), "Incoming Messages", {"incomingtranslate"}, "")
-menu.toggle(incoming, "Enable", {"translateincoming"}, "Enable Translations", function(toggle)
+menu.toggle(incoming, "Translate All Messages", {"translateincoming"}, "Enable Translations", function(toggle)
 	translate_incoming = toggle
 end)
 menu.text_input(incoming, "Select Language", {"translateincominglanguage"}, "", function (input)
@@ -65,7 +65,7 @@ menu.toggle(incoming, "Only translate foreign game lang", {"nextforeignonly"}, "
 end, true)
 --------------------Outgoing Messages-------------------
 local outgoing <const> = menu.list(menu.my_root(), "Outgoing Messages", {"outgoingtranslate"}, "")
-menu.toggle(outgoing, "Enable", {"translateoutgoing"}, "", function(toggle)
+menu.toggle(outgoing, "Translate All Messages", {"translateoutgoing"}, "", function(toggle)
 	translate_outgoing = toggle
 	if output_mode == 1 then
 		output_mode = 2
