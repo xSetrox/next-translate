@@ -155,7 +155,7 @@ chat.on_message(function(sender, reserved, text, team_chat, networked, is_auto)
             end
         end
         -- credit to the original chat translator for the api code
-        google_translate(encoded_text, iso_my_lang, sender, false)
+        google_translate(encoded_text, my_lang, sender, false)
     end
 end)
 
