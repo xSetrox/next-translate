@@ -4,10 +4,6 @@
 local debug = false
 -- END DEBUG 
 
-util.ensure_package_is_installed("lua/ScaleformLib")
-local chat_scaleform = require("lib.ScaleformLib")("multiplayer_chat")
-chat_scaleform:draw_fullscreen()
-
 -- example k,v value: "fr" = true
 local whitelisted_langs = {}
 
@@ -85,7 +81,7 @@ local function google_translate(text, to_lang, pid, outgoing)
             end
             if from_lang ~= to_lang then
                 if not outgoing then
-                    chat_scaleform.ADD_MESSAGE(players.get_name(pid), decoded_text, "TRANSLATION", false, 24)
+                    chat.send_targeted_message(players.user(), pid, "[T] " .. decoded_text, true)
                     players_on_cooldown[pid] = true
                     util.yield(1000)
                     players_on_cooldown[pid] = nil
